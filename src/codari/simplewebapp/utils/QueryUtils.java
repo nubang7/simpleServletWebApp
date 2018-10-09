@@ -123,4 +123,10 @@ public class QueryUtils {
 
 		pstm.executeUpdate();
 	}
+	
+
+    public static boolean print(String msg) {
+		System.out.println("Printing "+msg);
+		return true;
+	}
 }
