@@ -97,4 +97,20 @@ public class LoginServletTest {
 		loginServlet.doPost(request, response);
 		verify(response, times(1)).sendRedirect("SimpleWebApp/userInfo");
 	}
+	
+	@Test
+	public void doPost_userName_NULL_일때_테스트() throws ServletException, IOException, SQLException {
+		PowerMockito.mockStatic(QueryUtils.class);
+		PowerMockito.mockStatic(MyUtils.class);
+		when(loginServlet.getServletContext().getRequestDispatcher("/WEB-INF/views/loginView.jsp")).thenReturn(requestDispatcher);
+		when(request.getParameter("userName")).thenReturn(null);
+		when(request.getParameter("password")).thenReturn("yu123");
+		when(request.getParameter("rememberMe")).thenReturn("Y");
+		when(request.getContextPath()).thenReturn("SimpleWebApp");
+		when(request.getSession()).thenReturn(httpSession);
+		when(MyUtils.getStoredConnection(request)).thenReturn(connection);
+		when(QueryUtils.findUser(connection, request.getParameter("userName"), request.getParameter("password"))).thenReturn(userAccount);
+		loginServlet.doPost(request, response);
+		verify(requestDispatcher, times(1)).forward(request, response);
+	}
 }
