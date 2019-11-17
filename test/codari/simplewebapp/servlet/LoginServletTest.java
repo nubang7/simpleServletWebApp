@@ -25,6 +25,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import codari.simplewebapp.beans.UserAccount;
 import codari.simplewebapp.utils.MyUtils;
@@ -33,7 +36,8 @@ import codari.simplewebapp.utils.QueryUtils;
 // static 메서드나 생성자는 mockito로는 mocking이 불가능하므로 
 // 위의 상황에서 테스트를 하기 위해서는 powermock이 필요하다.
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({QueryUtils.class, MyUtils.class})
 public class LoginServletTest {
 	
 	@Mock
@@ -99,10 +103,13 @@ public class LoginServletTest {
 	}
 	
 	// static 메서드가 있어 mockito로 불가, powermock 사용필요함
-	/*@Test
+	@Test
 	public void doPost_rememberMe_Y_일때_테스트() throws ServletException, IOException, SQLException {
 		
 		// arrange
+		PowerMockito.mockStatic(QueryUtils.class);
+		PowerMockito.mockStatic(MyUtils.class);
+		
 		when(httpServletRequest.getParameter("userName")).thenReturn("yu");
 		when(httpServletRequest.getParameter("password")).thenReturn("yu123");
 		when(httpServletRequest.getParameter("rememberMe")).thenReturn("Y");
@@ -112,9 +119,25 @@ public class LoginServletTest {
 		when(QueryUtils.findUser(connection, httpServletRequest.getParameter("userName"), httpServletRequest.getParameter("password"))).thenReturn(userAccount);
 		
 		// act
-		loginServlet.doGet(httpServletRequest, httpServletResponse);
+		loginServlet.doPost(httpServletRequest, httpServletResponse);
 		
 		// assert
+		verify(httpServletResponse, times(1)).sendRedirect("SimpleWebApp/userInfo");
+	}
+	
+	@Test
+	public void doPost_userName_NULL_일때_테스트() throws ServletException, IOException, SQLException {
+		PowerMockito.mockStatic(QueryUtils.class);
+		PowerMockito.mockStatic(MyUtils.class);
+		when(loginServlet.getServletContext().getRequestDispatcher("/WEB-INF/views/loginView.jsp")).thenReturn(requestDispatcher);
+		when(httpServletRequest.getParameter("userName")).thenReturn(null);
+		when(httpServletRequest.getParameter("password")).thenReturn("yu123");
+		when(httpServletRequest.getParameter("rememberMe")).thenReturn("Y");
+		when(httpServletRequest.getContextPath()).thenReturn("SimpleWebApp");
+		when(httpServletRequest.getSession()).thenReturn(httpSession);
+		when(MyUtils.getStoredConnection(httpServletRequest)).thenReturn(connection);
+		when(QueryUtils.findUser(connection, httpServletRequest.getParameter("userName"), httpServletRequest.getParameter("password"))).thenReturn(userAccount);
+		loginServlet.doPost(httpServletRequest, httpServletResponse);
 		verify(requestDispatcher, times(1)).forward(httpServletRequest, httpServletResponse);
-	}*/
+	}
 }
