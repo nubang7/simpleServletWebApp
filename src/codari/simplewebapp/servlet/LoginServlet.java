@@ -18,7 +18,7 @@ import codari.simplewebapp.utils.MyUtils;
  
 @WebServlet(urlPatterns = { "/login" })
 public class LoginServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
+    public static final long serialVersionUID = 1L;
  
     public LoginServlet() {
         super();
@@ -26,7 +26,7 @@ public class LoginServlet extends HttpServlet {
  
     // Show Login page.
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
  
         // Forward to /WEB-INF/views/loginView.jsp
         // (Users can not access directly into JSP pages placed in WEB-INF)
@@ -40,7 +40,7 @@ public class LoginServlet extends HttpServlet {
     // When the user enters userName & password, and click Submit.
     // This method will be executed.
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String userName = request.getParameter("userName");
         String password = request.getParameter("password");
         String rememberMeStr = request.getParameter("rememberMe");
