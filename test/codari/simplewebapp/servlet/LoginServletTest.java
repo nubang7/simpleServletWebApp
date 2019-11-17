@@ -61,6 +61,7 @@ public class LoginServletTest {
 	HttpSession httpSession;
 	
 	@InjectMocks
+	@Spy
 	LoginServlet loginServlet= new LoginServlet();
 	
 	@Before
@@ -143,4 +144,19 @@ public class LoginServletTest {
 	    // assert
 	    Assert.assertEquals(true, result);
 	}
+	
+	@Test
+	public void staticMethod() throws Exception {
+		
+		// arrange
+		PowerMockito.mockStatic(LoginServlet.class);
+	    
+		//act
+		boolean result = Whitebox.<Boolean>invokeMethod(loginServlet, "staticMethod");
+	    
+	    // assert
+	    Assert.assertEquals(true, result);
+	}
+	
+	
 }
