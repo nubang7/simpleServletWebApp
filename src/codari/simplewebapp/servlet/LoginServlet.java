@@ -19,7 +19,8 @@ import codari.simplewebapp.utils.MyUtils;
 @WebServlet(urlPatterns = { "/login" })
 public class LoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
- 
+    private int privateField= 0;
+    
     public LoginServlet() {
         super();
     }
@@ -106,4 +107,18 @@ public class LoginServlet extends HttpServlet {
         }
     }
  
+    private boolean privateMethod(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	
+    	HttpSession session = request.getSession();
+    	UserAccount user = new UserAccount();
+        MyUtils.storeLoginedUser(session, user);
+    	
+        if (user == null) {
+        	privateField= 1;
+    		return false;
+        } else {
+        	privateField= 2;
+        	return true;
+        }
+    }
 }
